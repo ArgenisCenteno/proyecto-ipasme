@@ -98,7 +98,7 @@ class MovimientoController extends Controller
             // Crear registros individuales de BienAsignado
             for ($i = 0; $i < $bien['cantidad']; $i++) {
                 $codigo_inventario = 'INV-' . strtoupper(substr(md5(uniqid(rand(), true)), 0, 6)) . '-' . time();
-
+            //    dd($bien);
                 $asignacion = BienAsignado::create([
                     'departamento_id' => $request->departamento_destino_id,
                     'ente_id' => $request->ente_id,
@@ -107,7 +107,8 @@ class MovimientoController extends Controller
                     'cantidad' => 1,
                     'estado' => 'Activo', // puedes usar un estado por defecto como "activo"
                     'fecha_adquisicion' => $request->fecha, // o date('Y-m-d') si no viene en el request
-                    'codigo_inventario' => $codigo_inventario
+                    'codigo_inventario' => $codigo_inventario,
+                    'serial' => $bien['serial'] ?? null, // Si el serial es opcional
                 ]);
 
                 HistorialMovimiento::create([
@@ -338,7 +339,7 @@ class MovimientoController extends Controller
 
         Alert::success('¡Exito!', 'Movimiento registrado correctamente.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
 
-        return redirect()->route('movimientos.index')->with('success', 'Movimiento creado correctamente.');
+        return redirect()->route('salidas.index')->with('success', 'Movimiento creado correctamente.');
     }
 
     public function exportEntradasPorFecha(Request $request)

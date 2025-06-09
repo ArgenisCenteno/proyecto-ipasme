@@ -24,6 +24,8 @@ class Bien extends Model
         'fecha_adquisicion',
         'proveedor',
         'unidad_medida',
+        'modelo',
+        'marca',
     ];
 
     // Definir relaciones con otras tablas (modelo Categoria y Departamento)

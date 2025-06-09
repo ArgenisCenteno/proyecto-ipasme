@@ -23,22 +23,21 @@
           <div class="card-body">
           <div class="d-flex align-items-center">
             <!-- Add the image icon -->
-            <div class="subheader">Ordenes de Pago</div>
+            <div class="subheader">Bienes Disponibles</div>
             <div class="ms-auto lh-1">
             <div class="dropdown">
-              <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">Últimos 7 días</a>
-              <div class="dropdown-menu dropdown-menu-end">
-              <a class="dropdown-item active" href="#">Últimos 7 días</a>
-              <a class="dropdown-item" href="#">Últimos 30 días</a>
-              <a class="dropdown-item" href="#">Últimos 3 meses</a>
-              </div>
+
+
             </div>
             </div>
           </div>
           <div class="d-flex justify-content-between">
-            <div class="card-text-number mb-3">75</div>
-            <img src="imagenes/orden.png" alt="Orden Icon" class="mb-3 mt-3" style="width: 70px; height: 70px;">
+
+            <div class="card-text-number mb-3">
+            <h2>{{$bienes}}</h2>
+            </div>
+            <img src="imagenes/inventario.png" alt="Orden Icon" class="mb-3 mt-3"
+            style="width: 70px; height: 70px;">
           </div>
 
 
@@ -51,22 +50,20 @@
           <div class="card-body">
           <div class="d-flex align-items-center">
             <!-- Add the image icon -->
-            <div class="subheader">Salidas de Inventario</div>
+            <div class="subheader">Entradas</div>
             <div class="ms-auto lh-1">
             <div class="dropdown">
-              <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">Últimos 7 días</a>
-              <div class="dropdown-menu dropdown-menu-end">
-              <a class="dropdown-item active" href="#">Últimos 7 días</a>
-              <a class="dropdown-item" href="#">Últimos 30 días</a>
-              <a class="dropdown-item" href="#">Últimos 3 meses</a>
-              </div>
+
+
             </div>
             </div>
           </div>
           <div class="d-flex justify-content-between">
-            <div class="card-text-number mb-3">75</div>
-            <img src="imagenes/producto.png" alt="Orden Icon" class="mb-3 mt-3" style="width: 70px; height: 70px;">
+            <div class="card-text-number mb-3">
+            <h2>{{$entradas}}</h2>
+            </div>
+            <img src="imagenes/entradas.png" alt="Orden Icon" class="mb-3 mt-3"
+            style="width: 70px; height: 70px;">
           </div>
 
 
@@ -79,22 +76,19 @@
           <div class="card-body">
           <div class="d-flex align-items-center">
             <!-- Add the image icon -->
-            <div class="subheader">Pagos</div>
+            <div class="subheader">Salidas</div>
             <div class="ms-auto lh-1">
             <div class="dropdown">
-              <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">Últimos 7 días</a>
-              <div class="dropdown-menu dropdown-menu-end">
-              <a class="dropdown-item active" href="#">Últimos 7 días</a>
-              <a class="dropdown-item" href="#">Últimos 30 días</a>
-              <a class="dropdown-item" href="#">Últimos 3 meses</a>
-              </div>
+
+
             </div>
             </div>
           </div>
           <div class="d-flex justify-content-between">
-            <div class="card-text-number mb-3">75</div>
-            <img src="imagenes/pago.png" alt="Orden Icon" class="mb-3 mt-3" style="width: 70px; height: 70px;">
+            <div class="card-text-number mb-3">
+            <h2>{{ $salidas }}</h2>
+            </div>
+            <img src="imagenes/salidas.png" alt="Orden Icon" class="mb-3 mt-3" style="width: 70px; height: 70px;">
           </div>
 
 
@@ -109,18 +103,21 @@
             <!-- Add the image icon -->
             <div class="subheader">Departamentos</div>
             <div class="ms-auto lh-1">
-            
+
             </div>
           </div>
           <div class="d-flex justify-content-between">
-            <div class="card-text-number mb-3">75</div>
-            <img src="imagenes/departamentos.png" alt="Orden Icon" class="mb-3 mt-3" style="width: 70px; height: 70px;">
+            <div class="card-text-number mb-3">
+            <h2>{{$departamentos}}</h2>
+            </div>
+            <img src="imagenes/departamentos.png" alt="Orden Icon" class="mb-3 mt-3"
+            style="width: 70px; height: 70px;">
           </div>
 
 
-         
 
-        </div>
+
+          </div>
         </div>
         </div>
         <div class="col-lg-6">
@@ -129,12 +126,14 @@
           <div class="card">
             <div class="card-body">
             <div class="d-flex align-items-center">
-              <div class="subheader">Presupuesto</div>
+              <div class="subheader">Bienes Desaparecidos</div>
               <div class="ms-auto lh-1">
 
               </div>
             </div>
-            <div class="card-text-number mb-3">350,562.00</div>
+            <div class="card-text-number mb-3">
+              <h2>{{ $desaparecidos }}</h2>
+            </div>
 
 
             </div>
@@ -144,12 +143,14 @@
           <div class="card">
             <div class="card-body">
             <div class="d-flex align-items-center">
-              <div class="subheader">Causado</div>
+              <div class="subheader">Bienes Descartados</div>
               <div class="ms-auto lh-1">
 
               </div>
             </div>
-            <div class="card-text-number mb-3">150,235.00</div>
+            <div class="card-text-number mb-3">
+              <h2>{{ $descartados }}</h2>
+            </div>
 
 
             </div>
@@ -161,7 +162,7 @@
         <div class="col-lg-12">
           <div class="card">
           <div class="card-header border-0">
-            <div class="card-title">Causado Mensual</div>
+            <div class="card-title">Relación Entradas-Salidas</div>
           </div>
           <div class="position-relative">
             <div class="position-absolute top-0 left-0 px-3 mt-1 w-75">
@@ -171,7 +172,7 @@
 
             </div>
             </div>
-            <div id="chart-development-activity"></div>
+            <div id="graficoEntradasSalidas"></div>
           </div>
 
           </div>
@@ -198,39 +199,57 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    window.ApexCharts &&
-      new ApexCharts(document.getElementById("sparkline-activity"), {
-        chart: {
-          type: "radialBar",
-          fontFamily: "inherit",
-          height: 40,
-          width: 40,
-          animations: {
-            enabled: false,
-          },
-          sparkline: {
-            enabled: true,
-          },
+    const meses = [
+      "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+      "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+    ];
+
+    const data = @json($meses);
+
+    const entradas = data.map(d => d.entradas);
+    const salidas = data.map(d => d.salidas);
+
+    new ApexCharts(document.querySelector("#graficoEntradasSalidas"), {
+      chart: {
+        type: 'bar',
+        height: 350,
+        toolbar: {
+          show: false
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
         },
-        tooltip: {
-          enabled: false,
-        },
-        plotOptions: {
-          radialBar: {
-            hollow: {
-              margin: 0,
-              size: "75%",
-            },
-            track: {
-              margin: 0,
-            },
-            dataLabels: {
-              show: false,
-            },
-          },
-        },
-        colors: [tabler.getColor("blue")],
-        series: [35],
-      }).render();
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+      },
+      series: [{
+        name: 'Entradas',
+        data: entradas
+      }, {
+        name: 'Salidas',
+        data: salidas
+      }],
+      xaxis: {
+        categories: meses
+      },
+      colors: ['#00b894', '#d63031'],
+      fill: {
+        opacity: 1
+      },
+      tooltip: {
+        y: {
+          formatter: val => `${val} movimientos`
+        }
+      }
+    }).render();
   });
 </script>

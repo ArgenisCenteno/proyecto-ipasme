@@ -7,7 +7,7 @@
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Encargado</th>
-                <th>Estado</th>
+               
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -36,7 +36,7 @@
                
                 { data: 'descripcion', name: 'descripcion' },
                  { data: 'encargado', name: 'encargado' }, 
-                { data: 'estado', name: 'estado' },
+                
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],
 

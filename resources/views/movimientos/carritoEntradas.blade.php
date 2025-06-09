@@ -7,7 +7,11 @@
                 <th>Código</th>
                 <th>Categoría</th>
                 <th>Unidad Medida</th>
+                <th>Marca</th>
+                <th>Módelo</th>
+                <th>Serial</th>
                 <th>Cantidad</th>
+
                 <th>Acción</th>
             </tr>
         </thead>

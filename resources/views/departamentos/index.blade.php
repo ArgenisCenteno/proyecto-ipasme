@@ -10,7 +10,7 @@
                 <div class="container-xl">
                     <div class="row g-2 align-items-center">
                         <div class="col">
-                            <h1 class="page-title">Entes</h1>
+                            <h1 class="page-title">Departamentos</h1>
                         </div>
                         <div class="col-auto ms-auto">
                             <div class="btn-list">

@@ -5,9 +5,11 @@
 
                 <th>Código</th>
                 <th>Nombre</th>
-
                 <th>Categoría</th>
                 <th>Unidad Medida</th>
+                <th>Marca</th>
+                <th>Módelo</th>
+                <th>Serial</th>
                 <th>Estado</th>
                 <th>Opciones</th>
             </tr>
@@ -37,6 +39,9 @@
 
                 { data: 'categoria', name: 'categoria' },
                 { data: 'unidad_medida', name: 'unidad_medida' },
+                  { data: 'modelo', name: 'modelo' },
+                    { data: 'marca', name: 'marca' },
+                      { data: 'serial', name: 'serial' },
                 { data: 'estado', name: 'estado' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],

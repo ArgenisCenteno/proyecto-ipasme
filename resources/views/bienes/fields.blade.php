@@ -12,10 +12,11 @@
                 @enderror
             </div>
         </div>
-         <!-- Descripción -->
+        <!-- Descripción -->
         <div class="col-md-6 mb-3">
             <label for="descripcion" class="form-label">Descripción</label>
-            <textarea name="descripcion" id="descripcion" rows="3" class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion') }}</textarea>
+            <textarea name="descripcion" id="descripcion" rows="3"
+                class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion') }}</textarea>
             <div class="invalid-feedback">
                 @error('descripcion')
                     {{ $message }}
@@ -24,7 +25,28 @@
         </div>
     </div>
 
-    
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="form-group">
+                <label class="form-label" for="marca">Marca</label>
+                <input type="text" class="form-control @error('marca') is-invalid @enderror" id="marca" name="marca"
+                    value="{{ old('marca') }}" required>
+                @error('marca')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+        <!-- Descripción -->
+        <div class="col-md-6 mb-3">
+            <label for="modelo" class="form-label">Módelo</label>
+            <input name="modelo" type="text" id="modelo" rows="3" class="form-control @error('modelo') is-invalid @enderror" />
+            <div class="invalid-feedback">
+                @error('modelo')
+                    {{ $message }}
+                @enderror
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-6 mb-3">
@@ -35,7 +57,8 @@
                     <option value="">Selecciona una categoría</option>
                     @foreach($categorias as $categoria)
                         <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
-                            {{ $categoria->nombre }}</option>
+                            {{ $categoria->nombre }}
+                        </option>
                     @endforeach
                 </select>
                 @error('categoria_id')

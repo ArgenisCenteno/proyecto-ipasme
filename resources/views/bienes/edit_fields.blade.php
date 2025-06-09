@@ -25,7 +25,28 @@
             </div>
         </div>
     </div>
-
+ <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="form-group">
+                <label class="form-label" for="marca">Marca</label>
+                <input type="text" class="form-control @error('marca') is-invalid @enderror" value="{{ $bien->marca }}" id="marca" name="marca"
+                    value="{{ old('marca') }}" required>
+                @error('marca')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+        <!-- Descripción -->
+        <div class="col-md-6 mb-3">
+            <label for="modelo" class="form-label">Módelo</label>
+            <input name="modelo"  type="text" id="modelo" rows="3" value="{{ $bien->modelo }}" class="form-control @error('modelo') is-invalid @enderror" />
+            <div class="invalid-feedback">
+                @error('modelo')
+                    {{ $message }}
+                @enderror
+            </div>
+        </div>
+    </div>
    
 
     <div class="row">

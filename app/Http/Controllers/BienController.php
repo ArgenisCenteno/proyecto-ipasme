@@ -53,6 +53,8 @@ class BienController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
+            'marca' => 'required|string',
+            'modelo' => 'required|string',
             'categoria_id' => 'required|exists:categorias,id',
 
             'estado' => 'required|in:Activo,Inactivo,Dañado,Mantenimiento,Desaparecido',
@@ -86,7 +88,8 @@ class BienController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-
+            'modelo' => 'required|string|max:255',
+            'marca' => 'required|string|max:255',
             'categoria_id' => 'required|exists:categorias,id',
 
             'estado' => 'required|in:Activo,Inactivo,Dañado,Mantenimiento,Desaparecido',
@@ -174,6 +177,15 @@ class BienController extends Controller
 
                 ->editColumn('nombre', function ($row) {
                     return $row->bien->nombre ?? 'S/D';
+                })
+                 ->editColumn('modelo', function ($row) {
+                    return $row->bien->modelo ?? 'S/D';
+                })
+                 ->editColumn('marca', function ($row) {
+                    return $row->bien->marca ?? 'S/D';
+                })
+                 ->editColumn('serial', function ($row) {
+                    return $row->serial ?? 'S/D';
                 })
                 ->editColumn('categoria', function ($row) {
                     // dd($row->bien->categoria->nombre);

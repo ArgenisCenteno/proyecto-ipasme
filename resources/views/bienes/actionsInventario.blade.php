@@ -5,13 +5,16 @@
             <span>Editar</span>
         </a>
  
-        <form action="{{ route('bienes.destroyBienAsignado', $id) }}" method="POST" class="btn-delete" style="display:inline;">
+      {{-- 
+       <form action="{{ route('bienes.destroyBienAsignado', $id) }}" method="POST" class="btn-delete" style="display:inline;">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
                 <span >Eliminar</span>
             </button>
         </form>
+      
+      --}} 
         
     </div>
 </td>

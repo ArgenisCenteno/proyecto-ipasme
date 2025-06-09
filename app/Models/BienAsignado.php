@@ -19,7 +19,8 @@ class BienAsignado extends Model
         'cantidad',
         'estado',
         'fecha_adquisicion',
-        'codigo_inventario'
+        'codigo_inventario',
+        'serial'
     ];
 
     // Relaciones

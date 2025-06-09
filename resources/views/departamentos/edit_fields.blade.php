@@ -42,7 +42,7 @@
             <select name="estado" id="estado" class="form-select @error('estado') is-invalid @enderror" required>
                 <option value="">Seleccione</option>
                 <option value="1" {{ old('estado', $departamento->estado) == 1 ? 'selected' : '' }}>Activo</option>
-                <option value="0" {{ old('estado', $departamento->estado) == 0 ? 'selected' : '' }}>Inactivo</option>
+             
             </select>
             <div class="invalid-feedback">
                 @error('estado')
