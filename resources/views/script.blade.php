@@ -308,3 +308,15 @@
         });
     });
 </script>
+<script>
+$(document).on('input', '.only-text', function () {
+    let cleanValue = $(this).val().replace(/[^a-zA-ZÁÉÍÓÚáéíóúñÑ\s]/g, '');
+    $(this).val(cleanValue);
+});
+</script>
+<script>
+$(document).on('input', '.only-number', function () {
+    let cleanValue = $(this).val().replace(/[^0-9]/g, '');
+    $(this).val(cleanValue);
+});
+</script>

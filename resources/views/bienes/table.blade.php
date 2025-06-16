@@ -32,7 +32,15 @@
             type: "POST",
 
             columns: [
-                { data: 'id', name: 'id' },
+                 { 
+                    data: null,
+                    name: 'numero',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, full, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
                   { data: 'nombre', name: 'nombre' },
                 { data: 'codigo_inventario', name: 'codigo_inventario' },
                 { data: 'categoria.nombre', name: 'categoria.nombre' },

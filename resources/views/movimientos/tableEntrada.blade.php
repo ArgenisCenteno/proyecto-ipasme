@@ -31,7 +31,15 @@
             type: "POST",
 
             columns: [
-                { data: 'id', name: 'id' },
+                { 
+                    data: null,
+                    name: 'numero',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, full, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
                 { data: 'tipo', name: 'tipo' },
                 { data: 'descripcion', name: 'descripcion' },
                 { data: 'fecha', name: 'fecha' },

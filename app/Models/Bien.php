@@ -26,10 +26,11 @@ class Bien extends Model
         'unidad_medida',
         'modelo',
         'marca',
+        'activo'
     ];
 
     // Definir relaciones con otras tablas (modelo Categoria y Departamento)
-    
+
     // Relación con la tabla categorias
     public function categoria()
     {
@@ -49,4 +50,14 @@ class Bien extends Model
         return $this->inventario_inicial - $this->registrosDeSalida()->sum('cantidad');
     }*/
 
+    public function asignados()
+    {
+        return $this->hasMany(BienAsignado::class);
+    }
+
+    public function stockDisponible()
+    {
+        $repartido = $this->asignados()->sum('cantidad');
+        return $this->cantidad - $repartido;
+    }
 }

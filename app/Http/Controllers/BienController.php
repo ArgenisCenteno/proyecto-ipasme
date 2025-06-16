@@ -84,8 +84,9 @@ class BienController extends Controller
     }
 
     // Actualizar un bien existente
-    public function update(Request $request, Bien $bien)
+    public function update(Request $request, $id)
     {
+       
         $request->validate([
             'nombre' => 'required|string|max:255',
             'modelo' => 'required|string|max:255',
@@ -96,7 +97,7 @@ class BienController extends Controller
 
 
         ]);
-
+        $bien = Bien::findOrFail($id);
         $bien->update($request->all());
         Alert::success('¡Exito!', 'Bien actualizado correctamente.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
 
@@ -177,6 +178,9 @@ class BienController extends Controller
 
                 ->editColumn('nombre', function ($row) {
                     return $row->bien->nombre ?? 'S/D';
+                })
+                ->addColumn('activos', function ($row) {
+                    return $row->bien->activo ?? 'S/D';
                 })
                  ->editColumn('modelo', function ($row) {
                     return $row->bien->modelo ?? 'S/D';

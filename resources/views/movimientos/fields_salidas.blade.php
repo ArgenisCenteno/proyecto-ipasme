@@ -2,20 +2,8 @@
     @csrf
 
     <div class="row">
-
-        <!-- Ente Origen -->
-        <div class="col-md-6 mb-3">
-            <label for="ente_origen_id" class="form-label">Ente Origen <span class="text-danger">*</span></label>
-            <select name="ente_origen_id" id="ente_origen_id" class="form-select" required>
-                <option value="">Seleccione un ente</option>
-                @foreach ($entes as $id => $nombre)
-                    <option value="{{ $id }}" {{ old('ente_origen_id') == $id ? 'selected' : '' }}>{{ $nombre }}</option>
-                @endforeach
-            </select>
-             <div class="invalid-feedback">
-                @error('ente_origen_id') {{ $message }} @enderror
-            </div>
-        </div>
+        <!-- Ente Origen (Oculto) -->
+        <input type="hidden" name="ente_origen_id" value="{{ $entes->id }}">
 
         <!-- Departamento Origen -->
         <div class="col-md-6 mb-3">
@@ -23,24 +11,13 @@
             <select name="departamento_origen_id" id="departamento_origen_id" class="form-select" required>
                 <option value="">Seleccione un ente primero</option>
             </select>
-             <div class="invalid-feedback">
+            <div class="invalid-feedback">
                 @error('departamento_origen_id') {{ $message }} @enderror
             </div>
         </div>
 
-        <!-- Ente Destino -->
-        <div class="col-md-6 mb-3">
-            <label for="ente_destino_id" class="form-label">Ente Destino <span class="text-danger">*</span></label>
-            <select name="ente_destino_id" id="ente_destino_id" class="form-select" required>
-                <option value="">Seleccione un ente</option>
-                @foreach ($entes as $id => $nombre)
-                    <option value="{{ $id }}" {{ old('ente_destino_id') == $id ? 'selected' : '' }}>{{ $nombre }}</option>
-                @endforeach
-            </select>
-             <div class="invalid-feedback">
-                @error('ente_destino_id') {{ $message }} @enderror
-            </div>
-        </div>
+        <!-- Ente Destino (Oculto) -->
+        <input type="hidden" name="ente_destino_id" value="{{ $entes->id }}">
 
         <!-- Departamento Destino -->
         <div class="col-md-6 mb-3">
@@ -48,7 +25,7 @@
             <select name="departamento_destino_id" id="departamento_destino_id" class="form-select" required>
                 <option value="">Seleccione un ente primero</option>
             </select>
-             <div class="invalid-feedback">
+            <div class="invalid-feedback">
                 @error('departamento_destino_id') {{ $message }} @enderror
             </div>
         </div>
@@ -59,7 +36,7 @@
             <input type="date" name="fecha" id="fecha" class="form-control" value="{{ old('fecha') }}" required>
         </div>
 
-        <!-- Monto (nullable) -->
+        <!-- Monto -->
         <div class="col-md-6 mb-3">
             <label for="monto" class="form-label">Monto</label>
             <input type="number" step="any" name="monto" id="monto" class="form-control" value="{{ old('monto') }}">
@@ -88,6 +65,8 @@
 
 
 <script>
+    const enteUnicoId = "{{ $entes->id }}";
+
     function cargarDepartamentos(enteId, departamentoSelectId) {
         const departamentoSelect = document.getElementById(departamentoSelectId);
         departamentoSelect.innerHTML = '<option value="">Cargando...</option>';
@@ -110,38 +89,46 @@
         }
     }
 
-    document.getElementById('ente_origen_id').addEventListener('change', function () {
-        cargarDepartamentos(this.value, 'departamento_origen_id');
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+        // Cargar departamentos automáticamente ya que el ente es único
+        cargarDepartamentos(enteUnicoId, 'departamento_origen_id');
+        cargarDepartamentos(enteUnicoId, 'departamento_destino_id');
 
-    document.getElementById('ente_destino_id').addEventListener('change', function () {
-        cargarDepartamentos(this.value, 'departamento_destino_id');
-    });
-</script>
-<script>
-    document.getElementById('btn-submit').addEventListener('click', function (e) {
-        const deptoOrigen = document.getElementById('departamento_origen_id')?.value;
-        const deptoDestino = document.getElementById('departamento_destino_id')?.value;
+        // Validación: origen y destino no deben ser iguales
+        document.getElementById('btn-submit').addEventListener('click', function (e) {
+            const deptoOrigen = document.getElementById('departamento_origen_id')?.value;
+            const deptoDestino = document.getElementById('departamento_destino_id')?.value;
 
-       // console.log(deptoOrigen && deptoDestino && deptoOrigen == deptoDestino)
-        // Verificar que los valores existan y sean iguales
-        if (deptoOrigen && deptoDestino && deptoOrigen == deptoDestino) {
-            e.preventDefault(); // Evita el envío del formulario
+            if (deptoOrigen && deptoDestino && deptoOrigen == deptoDestino) {
+                e.preventDefault();
 
-            const destinoSelect = document.getElementById('departamento_destino_id');
-            destinoSelect.classList.add('is-invalid');
+                const destinoSelect = document.getElementById('departamento_destino_id');
+                destinoSelect.classList.add('is-invalid');
 
-            const feedback = destinoSelect.parentElement.querySelector('.invalid-feedback');
-            if (feedback) {
-                feedback.textContent = 'El departamento de destino no puede ser el mismo que el de origen.';
-            } else {
-                const div = document.createElement('div');
-                div.className = 'invalid-feedback';
-                div.textContent = 'El departamento de destino no puede ser el mismo que el de origen.';
-                destinoSelect.parentElement.appendChild(div);
+                const feedback = destinoSelect.parentElement.querySelector('.invalid-feedback');
+                if (feedback) {
+                    feedback.textContent = 'El departamento de destino no puede ser el mismo que el de origen.';
+                } else {
+                    const div = document.createElement('div');
+                    div.className = 'invalid-feedback';
+                    div.textContent = 'El departamento de destino no puede ser el mismo que el de origen.';
+                    destinoSelect.parentElement.appendChild(div);
+                }
+
+                return false;
             }
+        });
 
-            return false;
-        }
+        // Validar que la fecha no sea futura
+        const today = new Date().toISOString().split('T')[0];
+        const fechaInput = document.getElementById('fecha');
+        fechaInput.setAttribute('max', today);
+
+        fechaInput.addEventListener('change', function () {
+            if (this.value > today) {
+                this.value = '';
+                alert('La fecha no puede ser posterior a hoy.');
+            }
+        });
     });
 </script>

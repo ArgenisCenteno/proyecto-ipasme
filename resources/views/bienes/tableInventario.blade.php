@@ -10,6 +10,7 @@
                 <th>Marca</th>
                 <th>Módelo</th>
                 <th>Serial</th>
+                <th>Activo</th>
                 <th>Estado</th>
                 <th>Opciones</th>
             </tr>
@@ -42,6 +43,7 @@
                   { data: 'modelo', name: 'modelo' },
                     { data: 'marca', name: 'marca' },
                       { data: 'serial', name: 'serial' },
+                        { data: 'activos', name: 'activos' },
                 { data: 'estado', name: 'estado' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],

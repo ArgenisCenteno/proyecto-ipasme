@@ -1,4 +1,4 @@
-<header class="navbar navbar-expand-md navbar-light bg-light d-print-none">
+<header class="navbar navbar-expand-md  bg-success d-print-none">
     <div class="container">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
             aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,8 +7,8 @@
         <a class="navbar-brand navbar-brand-autodark" href="javascript:void(0)">
             <img src="{{ asset('imagenes/salud.png') }}" alt="salud" width="50px">
         </a>
-        <div class="collapse navbar-collapse" id="navbar-menu">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <div class="collapse navbar-collapse" id="navbar-menu" >
+            <ul class="navbar-nav me-auto mb-2 mb-md-0" >
                 @php 
                 $user = Auth::user();
                 @endphp
@@ -26,26 +26,42 @@
                                 <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
                             </svg>
                        </span>
-                        <span class="nav-link-title"> Inicio </span>
+                        <span class="nav-link-title text-white"> Inicio </span>
                     </a>
                 </li>
-
-                <li class="nav-item {{ request()->is('entes*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{route('entes.index')  }}">
+  <li class="nav-item ">
+                    <a class="nav-link" href="{{ route('proveedores.index') }}">
+                        <span class="nav-link-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users-group"
+                                width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M5 7a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path d="M15 7a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path d="M5 21v-2a4 4 0 0 1 4 -4h2" />
+                                <path d="M15 15h2a4 4 0 0 1 4 4v2" />
+                                <path d="M12 12a3 3 0 1 0 -3 -3a3 3 0 0 0 3 3z" />
+                                <path d="M12 12v6" />
+                            </svg>
+                        </span>
+                        <span class="nav-link-title"> Proveedores </span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{{route('categorias.index')}}">
                         <span class="nav-link-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-coins">
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-file-spark">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M9 14c0 1.657 2.686 3 6 3s6 -1.343 6 -3s-2.686 -3 -6 -3s-6 1.343 -6 3z" />
-                                <path d="M9 14v4c0 1.656 2.686 3 6 3s6 -1.344 6 -3v-4" />
                                 <path
-                                    d="M3 6c0 1.072 1.144 2.062 3 2.598s4.144 .536 6 0c1.856 -.536 3 -1.526 3 -2.598c0 -1.072 -1.144 -2.062 -3 -2.598s-4.144 -.536 -6 0c-1.856 .536 -3 1.526 -3 2.598z" />
-                                <path d="M3 6v10c0 .888 .772 1.45 2 2" />
-                                <path d="M3 11c0 .888 .772 1.45 2 2" />
+                                    d="M19 22.5a4.75 4.75 0 0 1 3.5 -3.5a4.75 4.75 0 0 1 -3.5 -3.5a4.75 4.75 0 0 1 -3.5 3.5a4.75 4.75 0 0 1 3.5 3.5" />
+                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                <path d="M12 21h-5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v3.5" />
                             </svg>
                         </span>
-                        <span class="nav-link-title"> Ente </span>
+                        <span class="nav-link-title"> Categorías </span>
                     </a>
                 </li>
                 <li class="nav-item ">
@@ -67,23 +83,7 @@
                         <span class="nav-link-title"> Departamentos </span>
                     </a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{route('categorias.index')}}">
-                        <span class="nav-link-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-file-spark">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path
-                                    d="M19 22.5a4.75 4.75 0 0 1 3.5 -3.5a4.75 4.75 0 0 1 -3.5 -3.5a4.75 4.75 0 0 1 -3.5 3.5a4.75 4.75 0 0 1 3.5 3.5" />
-                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                <path d="M12 21h-5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v3.5" />
-                            </svg>
-                        </span>
-                        <span class="nav-link-title"> Categorías </span>
-                    </a>
-                </li>
+               
                 <li class="nav-item ">
                     <a class="nav-link" href="{{ route('bienes.index') }}">
                         <span class="nav-link-icon">
@@ -121,24 +121,7 @@
                         <span class="nav-link-title"> Inventario </span>
                     </a>
                 </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{ route('proveedores.index') }}">
-                        <span class="nav-link-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users-group"
-                                width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M5 7a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                <path d="M15 7a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                <path d="M5 21v-2a4 4 0 0 1 4 -4h2" />
-                                <path d="M15 15h2a4 4 0 0 1 4 4v2" />
-                                <path d="M12 12a3 3 0 1 0 -3 -3a3 3 0 0 0 3 3z" />
-                                <path d="M12 12v6" />
-                            </svg>
-                        </span>
-                        <span class="nav-link-title"> Proveedores </span>
-                    </a>
-                </li>
+              
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('movimientos.index') }}">
                         <span class="nav-link-icon">
@@ -237,3 +220,11 @@
         </div>
     </div>
 </header>
+<style>
+    .navbar-nav .nav-link,
+    .navbar-nav .nav-link span,
+    .navbar-nav .nav-link svg {
+        color: white !important;
+        stroke: white !important;
+    }
+</style>

@@ -6,8 +6,7 @@
                 <th>Tipo</th>
                 <th>Descripción</th>
                 <th>Fecha</th>
-                <th>Ente Origen</th>
-                <th>Ente Destino</th>
+                
                 <th>Departamento Origen</th>
                 <th>Departamento Destino</th>
                  <th>Opciones</th>
@@ -33,12 +32,19 @@
             type: "POST",
 
             columns: [
-                { data: 'id', name: 'id' },
+                   { 
+                    data: null,
+                    name: 'numero',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, full, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
                 { data: 'tipo', name: 'tipo' },
                 { data: 'descripcion', name: 'descripcion' },
                 { data: 'fecha', name: 'fecha' },
-                { data: 'enteOrigen', name: 'enteOrigen' },
-                { data: 'enteDestino', name: 'enteDestino' },
+                
                 { data: 'departamentoOrigen', name: 'departamentoOrigen' },
                 { data: 'departamentoDestino', name: 'departamentoDestino' },
                  { data: 'actions', name: 'actions', orderable: false, searchable: false }

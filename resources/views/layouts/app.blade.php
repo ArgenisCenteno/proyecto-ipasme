@@ -47,6 +47,7 @@
         </main>
     </div>
 </body>
+
 @include('script')
 @include('sweetalert::alert')
 

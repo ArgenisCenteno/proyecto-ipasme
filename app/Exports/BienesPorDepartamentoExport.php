@@ -1,12 +1,12 @@
 <?php
+
 namespace App\Exports;
 
 use App\Models\BienAsignado;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class BienesPorDepartamentoExport implements FromCollection, WithHeadings, ShouldAutoSize
+class BienesPorDepartamentoExport implements FromView
 {
     protected $enteId;
     protected $departamentoId;
@@ -17,37 +17,16 @@ class BienesPorDepartamentoExport implements FromCollection, WithHeadings, Shoul
         $this->departamentoId = $departamentoId;
     }
 
-    public function collection()
+    public function view(): View
     {
-        return BienAsignado::with(['bien'])
-            ->where('estado', '!=','Inactivo')
-             ->where('estado', '!=','Descartado')
+        $bienes = BienAsignado::with(['bien', 'bien.categoria', 'movimiento', 'departamento', 'ente'])
+            ->whereNotIn('estado', ['Inactivo', 'Descartado'])
             ->where('ente_id', $this->enteId)
             ->where('departamento_id', $this->departamentoId)
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'Código' => $item->codigo_inventario,
-                    'Bien' => $item->bien->nombre ?? '',
-                    'Categoría' => $item->bien->categoria->nombre ?? '',
-                    'Adquisición' => $item->movimiento->fecha ?? '',
-                    'Estado' => $item->estado,
-                    'Departamento' => $item->departamento->nombre ?? '',
-                    'Ente' => $item->ente->nombre ?? '',
-                ];
-            });
-    }
+            ->get();
 
-    public function headings(): array
-    {
-        return [
-            'Código',
-            'Bien',
-            'Categoría',
-            'Adquisición',
-            'Estado',
-            'Departamento',
-            'Ente',
-        ];
+        return view('exports.bienes', [
+            'bienes' => $bienes,
+        ]);
     }
 }

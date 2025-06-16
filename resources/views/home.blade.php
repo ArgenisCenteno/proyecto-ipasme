@@ -5,7 +5,7 @@
     <!-- Sidebar -->
 
 
-    <div class="page-wrapper">
+    <div class="page-wrapper pb-4 mb-4">
     <div class="page-header d-print-none">
       <div class="container-xl">
       <div class="row g-2 align-items-center">
@@ -156,6 +156,31 @@
             </div>
           </div>
           </div>
+          <div class="col-12 pb-4 mb-4">
+          <div class="card">
+            <div class="card-body" style="height: 10rem">
+            <table class="table table-striped table-hover">
+              <thead>
+              <tr>
+                <th>Bien</th>
+                <th>Disponible</th>
+                <th>Mensaje</th>
+              </tr>
+              </thead>
+              <tbody>
+              @foreach ($paginatedAlertas as $item)
+          <tr>
+          <td>{{ $item['bien'] }}</td>
+          <td>{{ $item['disponible'] }}</td>
+          <td>{{ $item['mensaje'] }}</td>
+          </tr>
+        @endforeach
+              </tbody>
+            </table>
+            {{ $paginatedAlertas->links() }}
+            </div>
+          </div>
+          </div>
         </div>
         </div>
         <div class="col-lg-6">
@@ -178,11 +203,7 @@
           </div>
         </div>
         </div>
-        <div class="col-12">
-        <div class="card">
-          <div class="card-body" style="height: 10rem"></div>
-        </div>
-        </div>
+
 
 
 

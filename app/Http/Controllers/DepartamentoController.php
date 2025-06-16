@@ -43,7 +43,7 @@ class DepartamentoController extends Controller
      */
     public function create()
     {
-        $entes = Ente::all(); // Obtenemos todos los entes para asociarlos con el departamento
+        $entes = Ente::first(); // Obtenemos todos los entes para asociarlos con el departamento
         return view('departamentos.create', compact('entes'));
     }
 

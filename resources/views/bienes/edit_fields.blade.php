@@ -105,6 +105,15 @@
                 @enderror
             </div>
         </div>
+         <div class="col-md-6 mb-3">
+            <label for="activo" class="form-label">Activo</label>
+            <input name="activo" type="text" id="activo" value="{{ $bien->activo ?? '' }}"   class="form-control @error('activo') is-invalid @enderror" />
+            <div class="invalid-feedback">
+                @error('activo')
+                    {{ $message }}
+                @enderror
+            </div>
+        </div>
     </div>
 
     <div class="btn-list d-flex justify-content-end">

@@ -6,6 +6,7 @@ use App\Exports\EntradasPorFechaExport;
 use App\Exports\SalidasPorFechaExport;
 use App\Models\BienAsignado;
 use App\Models\BienMovimiento;
+use App\Models\Departamento;
 use App\Models\Ente;
 use App\Models\HistorialMovimiento;
 use App\Models\Movimiento;
@@ -40,9 +41,10 @@ class MovimientoController extends Controller
     public function create()
     {
         $proveedores = Proveedor::pluck('razon_social', 'id');
-        $entes = Ente::pluck('nombre', 'id');
+        $entes = Ente::first();
+        $departamentos = Departamento::where('nombre', 'ALMACEN')->get();
 
-        return view('movimientos.create', compact('proveedores', 'entes'));
+        return view('movimientos.create', compact('proveedores', 'entes', 'departamentos'));
     }
 
     public function store(Request $request)
@@ -234,7 +236,7 @@ class MovimientoController extends Controller
     public function createSalida(Request $request)
     {
 
-        $entes = Ente::pluck('nombre', 'id');
+        $entes = Ente::first();
 
         return view('movimientos.createSalida', compact('entes'));
     }

@@ -6,7 +6,7 @@
         <!-- Nombre -->
         <div class="col-md-6 mb-3">
             <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
-            <input type="text" name="nombre" id="nombre" class="form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre', $categoria->nombre) }}" required>
+            <input type="text" name="nombre" id="nombre" class="only-text form-control @error('nombre') is-invalid @enderror" value="{{ old('nombre', $categoria->nombre) }}" required>
             <div class="invalid-feedback">
                 @error('nombre')
                     {{ $message }}
