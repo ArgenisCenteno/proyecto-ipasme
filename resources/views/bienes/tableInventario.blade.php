@@ -11,6 +11,7 @@
                 <th>Módelo</th>
                 <th>Serial</th>
                 <th>Activo</th>
+                 <th>Cantidad</th>
                 <th>Estado</th>
                 <th>Opciones</th>
             </tr>
@@ -40,10 +41,12 @@
 
                 { data: 'categoria', name: 'categoria' },
                 { data: 'unidad_medida', name: 'unidad_medida' },
+                 { data: 'marca', name: 'marca' },
                   { data: 'modelo', name: 'modelo' },
-                    { data: 'marca', name: 'marca' },
+                   
                       { data: 'serial', name: 'serial' },
                         { data: 'activos', name: 'activos' },
+                         { data: 'cantidad', name: 'cantidad' },
                 { data: 'estado', name: 'estado' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],

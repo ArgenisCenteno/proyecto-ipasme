@@ -1,10 +1,13 @@
 <td>
     <div class='btn-list'>
         <a href="{{ route('salidas.show', $id) }}" class='btn btn-success' data-bs-toggle="tooltip"
-           data-bs-placement="top" title="Editar">
+           data-bs-placement="top" title="Ver">
             <span>Ver</span>
         </a>
-
+ <a href="{{ route('salidas.edit', $id) }}" class='btn btn-info' data-bs-toggle="tooltip"
+            data-bs-placement="top" title="Editar">
+            <span>Editar</span>
+        </a>
         <form action="{{ route('movimientos.destroy', $id) }}" method="POST" class="btn-delete" style="display:inline;">
             @csrf
             @method('DELETE')

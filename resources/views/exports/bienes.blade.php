@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-   
+
 </head>
+
 <body>
 
     <div class="cintillo">
-        
+
     </div>
 
-  
+
     <table>
-          <thead>
+        <thead>
             <tr>
                 <th><img src="{{ public_path('imagenes/cintillo.jpg') }}" height="80"></th>
-               
+
             </tr>
-              <tr>
-                 <th style="text-align: center !important"><h1>REPORTE DE INVENTARIO</h1></th>
-               
+            <tr>
+                <th style="text-align: center !important">
+                    <h1>REPORTE DE INVENTARIO</h1>
+                </th>
+
             </tr>
         </thead>
     </table>
@@ -52,4 +56,5 @@
     </table>
 
 </body>
+
 </html>

@@ -319,4 +319,27 @@ $(document).on('input', '.only-number', function () {
     let cleanValue = $(this).val().replace(/[^0-9]/g, '');
     $(this).val(cleanValue);
 });
+
+$(document).ready(function () {
+    $('#desde').on('change', function () {
+        let desde = $(this).val();
+        $('#hasta').attr('min', desde); // Establece el mínimo permitido para 'hasta'
+
+        // Si la fecha hasta es menor que la nueva fecha desde, la borra
+        if ($('#hasta').val() && $('#hasta').val() < desde) {
+            $('#hasta').val('');
+        }
+    });
+
+    $('#hasta').on('change', function () {
+        let hasta = $(this).val();
+        $('#desde').attr('max', hasta); // Establece el máximo permitido para 'desde'
+
+        // Si la fecha desde es mayor que la nueva fecha hasta, la borra
+        if ($('#desde').val() && $('#desde').val() > hasta) {
+            $('#desde').val('');
+        }
+    });
+});
+
 </script>

@@ -34,8 +34,9 @@ class MovimientoController extends Controller
                 ->rawColumns(['actions'])
                 ->make(true);
         } else {
-            $entes = Ente::pluck('nombre', 'id');
-            return view('movimientos.entradas')->with('entes', $entes);
+            $entes = Ente::first();
+             $departamentos = Departamento::where('nombre', 'ALMACEN')->get();
+            return view('movimientos.entradas')->with('entes', $entes)->with('departamentos', $departamentos);
         }
     }
     public function create()
@@ -134,14 +135,105 @@ class MovimientoController extends Controller
     {
         // Aquí puedes cargar los datos necesarios para la vista de edición
         $movimiento = Movimiento::find($id);
-        return view('movimientos.edit', compact('movimiento'));
+          $proveedores = Proveedor::pluck('razon_social', 'id');
+        $entes = Ente::first();
+        $departamentos = Departamento::where('nombre', 'ALMACEN')->get();
+
+        return view('movimientos.edit', compact('movimiento', 'departamentos', 'entes', 'proveedores'));
     }
-    public function update(Request $request, $id)
+    public function editSalida($id)
     {
-        // Aquí puedes manejar la lógica para actualizar un movimiento existente
-        // Validar y actualizar el movimiento en la base de datos
-        return redirect()->route('movimientos.index')->with('success', 'Movimiento actualizado correctamente.');
+        // Aquí puedes cargar los datos necesarios para la vista de edición
+        $movimiento = Movimiento::find($id);
+          $proveedores = Proveedor::pluck('razon_social', 'id');
+        $entes = Ente::first();
+        $departamentos = Departamento::where('nombre', 'ALMACEN')->get();
+
+        return view('movimientos.editSalida', compact('movimiento', 'departamentos', 'entes', 'proveedores'));
     }
+   public function update(Request $request, $id)
+{
+    $movimiento = Movimiento::findOrFail($id);
+
+    $request->validate([
+        'proveedor_id' => 'required|exists:proveedores,id',
+        'departamento_destino_id' => 'required|exists:departamentos,id',
+        'fecha' => 'required|date',
+        'factura' => 'nullable|string|max:255|unique:movimientos,factura,' . $id,
+        'descripcion' => 'required|string',
+        'observacion' => 'nullable|string|max:255',
+        'cantidades' => 'required|array',
+    ]);
+
+    $movimiento->update([
+        'proveedor_id' => $request->proveedor_id,
+        'departamento_destino_id' => $request->departamento_destino_id,
+        'fecha' => $request->fecha,
+        'factura' => $request->factura,
+        'descripcion' => $request->descripcion,
+        'observaciones' => $request->observacion,
+    ]);
+
+   foreach ($request->cantidades as $bienMovimientoId => $nuevaCantidad) {
+    $bienMovimiento = BienMovimiento::find($bienMovimientoId);
+    
+    if ($bienMovimiento && $bienMovimiento->movimiento_id == $movimiento->id) {
+        $cantidadAnterior = $bienMovimiento->cantidad;
+        $bienMovimiento->cantidad = $nuevaCantidad;
+        $bienMovimiento->save();
+
+        // Diferencia de cantidad
+        $diferencia = $nuevaCantidad - $cantidadAnterior;
+       
+        if ($diferencia > 0) {
+            // Crear nuevas asignaciones
+            for ($i = 0; $i < $diferencia; $i++) {
+                $codigo_inventario = 'INV-' . strtoupper(substr(md5(uniqid(rand(), true)), 0, 6)) . '-' . time();
+                
+                $asignacion = BienAsignado::create([
+                    'departamento_id' => $movimiento->departamento_destino_id,
+                    'ente_id' => $movimiento->ente_destino_id,
+                    'bien_id' => $bienMovimiento->bien_id,
+                    'movimiento_id' => $movimiento->id,
+                    'cantidad' => 1,
+                    'estado' => 'Activo',
+                    'fecha_adquisicion' => $movimiento->fecha,
+                    'codigo_inventario' => $codigo_inventario,
+                    'serial' => null,
+                ]);
+
+                HistorialMovimiento::create([
+                    'ente_destino_id' => $movimiento->ente_destino_id,
+                    'departamento_destino_id' => $movimiento->departamento_destino_id,
+                    'bien_id' => $bienMovimiento->bien_id,
+                    'bien_asignado_id' => $asignacion->id,
+                    'tipo' => 'ENTRADA',
+                    'codigo_inventario' => $asignacion->codigo_inventario,
+                ]);
+            }
+        } elseif ($diferencia < 0) {
+            // Buscar asignaciones activas para este movimiento y bien
+            $asignaciones = BienAsignado::where('movimiento_id', $movimiento->id)
+                ->where('bien_id', $bienMovimiento->bien_id)
+                ->where('estado', 'Activo')
+                ->limit(abs($diferencia))
+                ->get();
+       
+            foreach ($asignaciones as $asignacion) {
+  
+                $asignacion->delete();
+                
+            }
+        }
+    }
+}
+
+
+    Alert::success('¡Actualizado!', 'Movimiento actualizado correctamente')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+    return redirect()->route('movimientos.index');
+}
+
+
     public function destroy($id)
     {
         $movimiento = Movimiento::find($id);
@@ -226,8 +318,9 @@ class MovimientoController extends Controller
                 ->rawColumns(['actions'])
                 ->make(true);
         } else {
-            $entes = Ente::pluck('nombre', 'id');
-            return view('movimientos.salidas')->with('entes', $entes);
+             $entes = Ente::first();
+             $departamentos = Departamento::where('nombre', 'ALMACEN')->get();
+            return view('movimientos.salidas')->with('entes', $entes)->with('departamentos', $departamentos);
         }
 
 
@@ -371,4 +464,88 @@ class MovimientoController extends Controller
         $departamento = $request->input('departamento_destino_id');
         return Excel::download(new SalidasPorFechaExport($desde, $hasta, $ente, $departamento), 'entradas_por_fecha.xlsx');
     }
+
+    public function updateSalida(Request $request, $id)
+{
+    $movimiento = Movimiento::findOrFail($id);
+
+    $request->validate([
+        'ente_destino_id' => 'required|exists:entes,id',
+        'ente_origen_id' => 'required|exists:entes,id',
+        'departamento_destino_id' => 'required|exists:departamentos,id',
+        'departamento_origen_id' => 'required|exists:departamentos,id',
+        'factura' => 'nullable|string|max:255|unique:movimientos,factura,' . $id,
+        'monto' => 'required|numeric|min:0',
+        'descripcion' => 'required|string',
+        'observacion' => 'nullable|string|max:255',
+        'fecha' => 'required|date',
+        'cantidades' => 'required|array',
+    ]);
+
+    // Actualiza los campos generales
+    $movimiento->update([
+        'ente_destino_id' => $request->ente_destino_id,
+        'ente_origen_id' => $request->ente_origen_id,
+        'departamento_destino_id' => $request->departamento_destino_id,
+        'departamento_origen_id' => $request->departamento_origen_id,
+        'factura' => $request->factura,
+        'monto' => $request->monto,
+        'descripcion' => $request->descripcion,
+        'observaciones' => $request->observacion,
+        'fecha' => $request->fecha,
+    ]);
+
+    foreach ($request->cantidades as $bienMovimientoId => $nuevaCantidad) {
+        $bienMovimiento = \App\Models\BienMovimiento::find($bienMovimientoId);
+
+        if ($bienMovimiento && $bienMovimiento->movimiento_id == $movimiento->id) {
+            $cantidadAnterior = $bienMovimiento->cantidad;
+            $bienMovimiento->update(['cantidad' => $nuevaCantidad]);
+
+            $bien_id = $bienMovimiento->bien_id;
+
+            if ($nuevaCantidad > $cantidadAnterior) {
+                // Asignar nuevos bienes (crear BienAsignado y Historial)
+                $asignacionesInactivas = BienAsignado::where('bien_id', $bien_id)
+                    ->where('movimiento_id', $movimiento->id)
+                    ->where('estado', 'Inactivo')
+                    ->limit($nuevaCantidad - $cantidadAnterior)
+                    ->get();
+
+                foreach ($asignacionesInactivas as $asignacion) {
+                    $asignacion->estado = 'Activo';
+                    $asignacion->save();
+
+                    HistorialMovimiento::create([
+                        'ente_destino_id' => $request->ente_destino_id,
+                        'departamento_destino_id' => $request->departamento_destino_id,
+                        'ente_origen_id' => $request->ente_origen_id,
+                        'departamento_origen_id' => $request->departamento_origen_id,
+                        'bien_id' => $bien_id,
+                        'bien_asignado_id' => $asignacion->id,
+                        'codigo_inventario' => $asignacion->codigo_inventario,
+                        'tipo' => 'SALIDA',
+                    ]);
+                }
+            } elseif ($nuevaCantidad < $cantidadAnterior) {
+                // Revertir asignaciones
+                $asignaciones = BienAsignado::where('bien_id', $bien_id)
+                    ->where('movimiento_id', $movimiento->id)
+                    ->where('estado', 'Activo')
+                    ->latest()
+                    ->limit($cantidadAnterior - $nuevaCantidad)
+                    ->get();
+
+                foreach ($asignaciones as $asignacion) {
+                    $asignacion->estado = 'Revertido';
+                    $asignacion->save();
+                }
+            }
+        }
+    }
+
+    Alert::success('¡Actualizado!', 'Salida actualizada correctamente')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+    return redirect()->route('salidas.index');
+}
+
 }

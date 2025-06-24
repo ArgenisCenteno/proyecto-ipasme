@@ -42,78 +42,68 @@
             </div>
         </div>
     </div>
-<!-- Modal -->
-<div class="modal modal-blur fade" id="modalEntradasPorFecha" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+    <!-- Modal -->
+    <div class="modal modal-blur fade" id="modalEntradasPorFecha" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title">Exportar Entradas por Fecha</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header">
+                    <h5 class="modal-title">Exportar Entradas por Fecha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form action="{{ route('exportar.entradas.fecha') }}" method="GET">
+                    <div class="modal-body">
+                        <div class="row">
+                            <!-- Ente -->
+                            <input type="hidden" name="ente_id" value="{{ $entes->id }}">
+
+                            <!-- Departamento -->
+                            <div class="col-md-6 mb-3">
+                                <label for="departamento_destino_id" class="form-label">Departamento <span
+                                        class="text-danger">*</span></label>
+                                <select name="departamento_destino_id" id="departamento_destino_id"
+                                    class="form-select @error('departamento_destino_id') is-invalid @enderror" required>
+                                    <option value="">Seleccione un departamento</option>
+                                    @foreach ($departamentos as $d)
+                                        <option value="{{ $d->id }}" {{ old('departamento_id') == $d->id ? 'selected' : '' }}>
+                                            {{ $d->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback">
+                                    @error('departamento_destino_id') {{ $message }} @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Desde -->
+                            <div class="col-md-6 mb-3">
+                                <label for="desde" class="form-label">Desde</label>
+                                <input type="date" name="desde" id="desde" class="form-control" required>
+                            </div>
+
+                            <!-- Hasta -->
+                            <div class="col-md-6 mb-3">
+                                <label for="hasta" class="form-label">Hasta</label>
+                                <input type="date" name="hasta" id="hasta" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success ms-auto">
+                            Consultar
+                        </button>
+                    </div>
+                </form>
+
             </div>
-
-            <form action="{{ route('exportar.entradas.fecha') }}" method="GET">
-                <div class="modal-body">
-                    <div class="row">
-                        <!-- Ente -->
-                        <div class="col-md-6 mb-3">
-                            <label for="ente_id" class="form-label">Ente <span class="text-danger">*</span></label>
-                            <select name="ente_id" id="ente_id"
-                                class="form-select @error('ente_id') is-invalid @enderror" required>
-                                <option value="">Seleccione un ente</option>
-                                @foreach ($entes as $id => $nombre)
-                                    <option value="{{ $id }}" {{ old('ente_id') == $id ? 'selected' : '' }}>
-                                        {{ $nombre }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback">
-                                @error('ente_id') {{ $message }} @enderror
-                            </div>
-                        </div>
-
-                        <!-- Departamento -->
-                        <div class="col-md-6 mb-3">
-                            <label for="departamento_destino_id" class="form-label">Departamento <span
-                                    class="text-danger">*</span></label>
-                            <select name="departamento_destino_id" id="departamento_destino_id"
-                                class="form-select @error('departamento_destino_id') is-invalid @enderror" required>
-                                <option value="">Seleccione un departamento</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                @error('departamento_destino_id') {{ $message }} @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- Desde -->
-                        <div class="col-md-6 mb-3">
-                            <label for="desde" class="form-label">Desde</label>
-                            <input type="date" name="desde" id="desde" class="form-control" required>
-                        </div>
-
-                        <!-- Hasta -->
-                        <div class="col-md-6 mb-3">
-                            <label for="hasta" class="form-label">Hasta</label>
-                            <input type="date" name="hasta" id="hasta" class="form-control" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-link link-secondary" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-success ms-auto">
-                        Consultar
-                    </button>
-                </div>
-            </form>
-
         </div>
     </div>
-</div>
 
 @endsection
 <script>

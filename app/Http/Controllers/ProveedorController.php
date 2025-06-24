@@ -79,10 +79,20 @@ class ProveedorController extends Controller
     }
 
     // Eliminar proveedor
-    public function destroy(Proveedor $proveedor)
+   public function destroy( $id)
     {
-        $proveedor->delete();
+        try {
+            $proveedor = Proveedor::findOrFail($id);
+            $proveedor->delete();
+                        Alert::success('Exito', 'Registro eliminado')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+
 
         return redirect()->route('proveedores.index')->with('success', 'Proveedor eliminado correctamente.');
+        } catch (\Throwable $th) {
+            //throw $th;
+                        Alert::error('Error', 'Este registro no puede ser eliminado')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+        return redirect()->route('proveedores.index')->with('success', 'Proveedor eliminado correctamente.');
+
+        }
     }
 }

@@ -7,7 +7,7 @@
                 <th>Descripción</th>
                 <th>Fecha</th>
                 <th>Departamento</th>
-                <th>Proveedor</th> 
+                <th>Proveedor</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -31,7 +31,7 @@
             type: "POST",
 
             columns: [
-                { 
+                {
                     data: null,
                     name: 'numero',
                     orderable: false,
@@ -44,7 +44,14 @@
                 { data: 'descripcion', name: 'descripcion' },
                 { data: 'fecha', name: 'fecha' },
                 { data: 'departamentoDestino', name: 'departamentoDestino' },
-                { data: 'proveedor.razon_social', name: 'proveedor.razon_social' }, 
+                {
+                    data: 'proveedor.razon_social',
+                    name: 'proveedor.razon_social',
+                    render: function (data, type, row) {
+                        return data ?? '';
+                    }
+                },
+
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],
 

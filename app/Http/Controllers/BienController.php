@@ -131,7 +131,7 @@ class BienController extends Controller
         $query = BienAsignado::with('bien') // Asegúrate de tener la relación 'categoria' en el modelo Bien
             ->where('departamento_id', $departamento_id)
             ->where('estado', 'Activo');
-
+       
         return DataTables::of($query)
             ->addColumn('categoria_nombre', function ($bien) {
                 return $bien->bien->categoria->nombre ?? 'Sin categoría';

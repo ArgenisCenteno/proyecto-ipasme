@@ -1,15 +1,19 @@
 <td>
     <div class='btn-list'>
         <a href="{{ route('movimientos.show', $id) }}" class='btn btn-success' data-bs-toggle="tooltip"
-           data-bs-placement="top" title="Editar">
+            data-bs-placement="top" title="Ver">
             <span>Ver</span>
         </a>
-
+        <a href="{{ route('movimientos.edit', $id) }}" class='btn btn-info' data-bs-toggle="tooltip"
+            data-bs-placement="top" title="Editar">
+            <span>Editar</span>
+        </a>
         <form action="{{ route('movimientos.destroy', $id) }}" method="POST" class="btn-delete" style="display:inline;">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                <span >Eliminar</span>
+            <button type="submit" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+                title="Eliminar">
+                <span>Eliminar</span>
             </button>
         </form>
     </div>
@@ -20,8 +24,8 @@
 
 <!-- ALERT DE CONFIRMACION DE ELIMINACION -->
 <script>
-    $(document).ready(function() {
-        $('.btn-delete').submit(function(e) {
+    $(document).ready(function () {
+        $('.btn-delete').submit(function (e) {
             e.preventDefault();
 
             Swal.fire({

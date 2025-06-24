@@ -50,6 +50,8 @@ Route::get('/exportar-bienes', [BienController::class, 'exportBienesPorDepartame
 Route::get('/exportar/entradas-fecha', [MovimientoController::class, 'exportEntradasPorFecha'])->name('exportar.entradas.fecha');
 Route::get('/exportar/salidas-fecha', [MovimientoController::class, 'exportSalidasPorFecha'])->name('exportar.salidas.fecha');
 Route::get('/inventario/pdf/{id}', [PdfController::class, 'pdfBienInventario'])->name('pdf.inventario');
+Route::put('/editar/salida/{id}', [MovimientoController::class, 'updateSalida'])->name('salidas.update');
+Route::get('/salidas/edit/{id}', [MovimientoController::class, 'editSalida'])->name('salidas.edit');
 
 
 });

@@ -1,16 +1,17 @@
 <?php
+
 namespace App\Exports;
 
 use App\Models\Movimiento;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class EntradasPorFechaExport implements FromCollection, WithHeadings, ShouldAutoSize
+class EntradasPorFechaExport implements FromView
 {
     protected $desde;
     protected $hasta;
+    protected $ente;
+    protected $departamento;
 
     public function __construct($desde, $hasta, $ente, $departamento)
     {
@@ -20,16 +21,15 @@ class EntradasPorFechaExport implements FromCollection, WithHeadings, ShouldAuto
         $this->departamento = $departamento;
     }
 
-    public function collection()
+    public function view(): View
     {
-        return Movimiento::with(['enteOrigen', 'enteDestino', 'departamentoOrigen', 'departamentoDestino', 'user'])
+        $datos = Movimiento::with(['enteOrigen', 'enteDestino', 'departamentoOrigen', 'departamentoDestino', 'user'])
             ->where('tipo', 'ENTRADA')
             ->whereBetween('fecha', [$this->desde, $this->hasta])
             ->where('departamento_destino_id', $this->departamento)
             ->where('ente_destino_id', $this->ente)
             ->get()
             ->map(function ($movimiento) {
-               // dd($movimiento);
                 return [
                     'Fecha' => $movimiento->fecha->format('Y-m-d'),
                     'Descripción' => $movimiento->descripcion,
@@ -40,18 +40,7 @@ class EntradasPorFechaExport implements FromCollection, WithHeadings, ShouldAuto
                     'Usuario' => optional($movimiento->user)->name,
                 ];
             });
-    }
 
-    public function headings(): array
-    {
-        return [
-            'Fecha',
-            'Descripción',
-            'Factura',
-            'Monto',
-            'Ente',
-            'Departamento',
-            'Usuario',
-        ];
+        return view('exports.entradas', compact('datos'));
     }
 }

@@ -65,4 +65,8 @@ class Movimiento extends Model
     {
         return $this->hasMany(BienMovimiento::class, 'movimiento_id');
     }
+     public function bienes()
+    {
+        return $this->hasMany(BienMovimiento::class, 'movimiento_id');
+    }
 }
