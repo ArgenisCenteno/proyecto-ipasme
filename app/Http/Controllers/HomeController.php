@@ -61,22 +61,31 @@ class HomeController extends Controller
         $desaparecidos = BienAsignado::where('estado', 'desaparecido')->count();
         $descartados = BienAsignado::where('estado', 'descartado')->count();
 
-        $stockMinimo = 5; // Umbral configurable
+       $stockMinimo = 5;
+$departamentoId = 16; // El almacén que quieres evaluar
 
-        $bieness = Bien::with('asignados')->get();
+// Obtienes todos los bienes asignados a ese departamento que están activos
+$asignados = BienAsignado::where('departamento_id', $departamentoId)
+    ->where('estado', 'activo') // o el valor que indique activo
+    ->get();
 
-        $alertas = [];
+// Agrupas por bien_id para sumar cantidades
+$stockPorBien = $asignados->groupBy('bien_id')->map(function ($items, $bienId) {
+    return $items->sum('cantidad');
+});
 
-        foreach ($bieness as $bien) {
-            $disponible = $bien->stockDisponible();
-            if ($disponible <= $stockMinimo) {
-                $alertas[] = [
-                    'bien' => $bien->nombre,
-                    'disponible' => $disponible,
-                    'mensaje' => "Quedan solo {$disponible} unidades de {$bien->nombre}, es necesario reponer.",
-                ];
-            }
-        }
+$alertas = [];
+
+foreach ($stockPorBien as $bienId => $cantidadDisponible) {
+    if ($cantidadDisponible <= $stockMinimo) {
+        $bien = Bien::find($bienId);
+        $alertas[] = [
+            'bien' => $bien->nombre,
+            'disponible' => $cantidadDisponible,
+            'mensaje' => "Quedan solo {$cantidadDisponible} unidades de {$bien->nombre} en almacén, es necesario reponer.",
+        ];
+    }
+}
 
         // Paginar el array $alertas
         $page = request()->get('page', 1);
@@ -91,7 +100,8 @@ class HomeController extends Controller
             $collection->count(),
             $perPage,
             $page,
-            ['path' => request()->url(), 'query' => request()->query()]
+            ['path' => request()->url()
+            , 'query' => request()->query()]
         );
 
 
