@@ -23,6 +23,7 @@
                         <!-- Ente Origen -->
                         <input type="hidden" name="ente_origen_id" value="{{ $movimiento->ente_origen_id }}">
                         <input type="hidden" name="ente_destino_id" value="{{ $movimiento->ente_destino_id }}">
+                            <input type="hidden" name="monto" step="any" class="form-control" value="{{ $movimiento->monto }}" required>
 
                         <!-- Departamento Origen -->
                         <div class="col-md-6 mb-3">
@@ -55,11 +56,7 @@
                         </div>
 
                         <!-- Monto -->
-                        <div class="col-md-6 mb-3">
-                            <label for="monto" class="form-label">Monto</label>
-                            <input type="number" name="monto" step="any" class="form-control" value="{{ $movimiento->monto }}" required>
-                        </div>
-
+                        
                         <!-- Factura -->
                         <div class="col-md-6 mb-3">
                             <label for="factura" class="form-label">Factura</label>

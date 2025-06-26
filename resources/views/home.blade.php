@@ -159,25 +159,30 @@
           <div class="col-12 pb-4 mb-4">
           <div class="card">
             <div class="card-body" style="height: 10rem">
-            <table class="table table-striped table-hover">
-              <thead>
-              <tr>
-                <th>Bien</th>
-                <th>Disponible</th>
-                <th>Mensaje</th>
-              </tr>
-              </thead>
-              <tbody>
-              @foreach ($paginatedAlertas as $item)
-          <tr>
-          <td>{{ $item['bien'] }}</td>
-          <td>{{ $item['disponible'] }}</td>
-          <td>{{ $item['mensaje'] }}</td>
-          </tr>
-        @endforeach
-              </tbody>
-            </table>
-            {{ $paginatedAlertas->links() }}
+           <h5>Bienes con Bajo Stock</h5>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Bien</th>
+            <th>Departamento</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($bienesBajoStock as $item)
+            <tr>
+                <td>{{ $item->bien->nombre }}</td>
+                <td>{{ $item->departamento->nombre }}</td>
+                <td>{{ $item->cantidad }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="3" class="text-center">Sin bienes con bajo stock</td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
+
             </div>
           </div>
           </div>

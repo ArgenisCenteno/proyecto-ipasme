@@ -6,7 +6,7 @@
                 <th>Nombre</th>
                 <th>Código</th>
                 <th>Categoría</th>
-                <th>Unidad Medida</th>
+                <th>Stock</th>
                 <th>Acción</th>
             </tr>
         </thead>
@@ -42,7 +42,7 @@
                     { data: 'bien.nombre', name: 'bien.nombre' },
                     { data: 'codigo_inventario', name: 'codigo_inventario' },
                     { data: 'categoria_nombre', name: 'categoria_nombre' },
-                    { data: 'bien.unidad_medida', name: 'bien.unidad_medida' },
+                    { data: 'cantidad', name: 'cantidad' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
                 language: {
@@ -61,7 +61,28 @@
         }
     });
 </script>
+<script src="{{asset('js/sweetalert2.js')}}"></script>
 <script>
+    $(document).on('input', '.cantidad-input', function () {
+    const input = $(this);
+    const row = input.closest('tr');
+    const stock = parseInt(row.find('td').eq(3).text()); // columna unidad (stock)
+    let valor = parseInt(input.val());
+
+    if (valor > stock) {
+        Swal.fire('Cantidad excede el stock disponible', '', 'warning');
+        input.val(stock); // ajustar al máximo permitido
+        valor = stock;
+    }
+
+    if (valor < 1 || isNaN(valor)) {
+        input.val(1); // establecer mínimo válido
+        valor = 1;
+    }
+
+    actualizarInputProductos();
+});
+
     let productosAgregados = [];
 
     function actualizarInputProductos() {
@@ -94,6 +115,10 @@
         let categoria = $(this).data('categoria');
         let unidad = $(this).data('unidad');
 
+         if (unidad <= 0) {
+              Swal.fire('Sin stock suficiente', '', 'warning');
+            return;
+        }
         let html = `
             <tr data-id="${id}">
                 <td>${nombre}</td>
@@ -101,7 +126,7 @@
                 <td>${categoria}</td>
                 <td>${unidad}</td>
                 <td>
-                    <input type="number" readonly class="form-control cantidad-input" min="1" value="1">
+                    <input type="number"  class="form-control cantidad-input" min="1" value="1">
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger btn-sm eliminar-producto">Eliminar</button>

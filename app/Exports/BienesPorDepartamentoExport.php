@@ -20,7 +20,7 @@ class BienesPorDepartamentoExport implements FromView
     public function view(): View
     {
         $bienes = BienAsignado::with(['bien', 'bien.categoria', 'movimiento', 'departamento', 'ente'])
-            ->whereNotIn('estado', ['Inactivo', 'Descartado'])
+            
             ->where('ente_id', $this->enteId)
             ->where('departamento_id', $this->departamentoId)
             ->get();

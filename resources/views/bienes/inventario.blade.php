@@ -45,30 +45,19 @@
                         <div class="col-12">
                             <div class="row">
                                 <!-- Ente -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="ente_id" class="form-label">Ente <span class="text-danger">*</span></label>
-                                    <select name="ente_id" id="ente_id"
-                                        class="form-select @error('ente_id') is-invalid @enderror" required>
-                                        <option value="">Seleccione un ente</option>
-                                        @foreach ($entes as $id => $nombre)
-                                            <option value="{{ $id }}" {{ old('ente_id') == $id ? 'selected' : '' }}>
-                                                {{ $nombre }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="invalid-feedback">
-                                        @error('ente_id') {{ $message }} @enderror
-                                    </div>
-                                </div>
-
+                                <input type="hidden" name="ente_id" value="{{ $entes->id }}">
                                 <!-- Departamento -->
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-12 mb-3">
                                     <label for="departamento_destino_id" class="form-label">Departamento <span
                                             class="text-danger">*</span></label>
                                     <select name="departamento_destino_id" id="departamento_destino_id"
                                         class="form-select @error('departamento_destino_id') is-invalid @enderror" required>
                                         <option value="">Seleccione un departamento</option>
+                                        @foreach($departamentos as $id => $nombre)
+                                            <option value="{{ $id }}">{{ $nombre }}</option>
+                                        @endforeach
                                     </select>
+
                                     <div class="invalid-feedback">
                                         @error('departamento_destino_id') {{ $message }} @enderror
                                     </div>

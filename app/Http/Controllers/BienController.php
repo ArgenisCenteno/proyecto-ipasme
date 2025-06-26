@@ -143,7 +143,7 @@ class BienController extends Controller
                         data-nombre="' . $bien->bien->nombre . '" 
                         data-codigo="' . $bien->codigo_inventario . '" 
                         data-categoria="' . $bien->bien->categoria->nombre . '" 
-                        data-unidad="' . $bien->bien->unidad_medida . '">
+                        data-unidad="' . $bien->cantidad . '">
                         Agregar
                     </button>';
             })
@@ -154,7 +154,7 @@ class BienController extends Controller
     public function inventario(Request $request)
     {
         if ($request->ajax()) {
-            $productos = BienAsignado::with('bien')->where('estado', '!=', 'Inactivo')->get(); // Cargar la relación subCategoria
+            $productos = BienAsignado::with('bien')->get(); // Cargar la relación subCategoria
 
             return DataTables::of($productos)
                 ->editColumn('estado', function ($row) {
@@ -207,8 +207,9 @@ class BienController extends Controller
                 ->rawColumns(['actions', 'estado'])
                 ->make(true);
         } else {
-            $entes = Ente::pluck('nombre', 'id');
-            return view('bienes.inventario')->with('entes', $entes);
+            $entes = Ente::first();
+            $departamentos = Departamento::pluck('nombre', 'id');
+            return view('bienes.inventario')->with('entes', $entes)->with('departamentos', $departamentos);
         }
     }
 

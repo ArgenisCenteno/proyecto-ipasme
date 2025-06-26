@@ -6,7 +6,7 @@
                 <th>Nombre</th>
                 <th>Código</th>
                 <th>Categoría</th>
-                <th>Unidad Medida</th>
+                <th>Stock</th>
                 <th>Cantidad</th>
                 <th>Acción</th>
             </tr>

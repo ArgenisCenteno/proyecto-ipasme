@@ -37,7 +37,7 @@
                 <th>Adquisición</th>
                 <th>Estado</th>
                 <th>Departamento</th>
-                <th>Ente</th>
+                <th>Cantidad</th>
             </tr>
         </thead>
         <tbody>
@@ -49,7 +49,7 @@
                     <td>{{ $item->movimiento->fecha ?? '' }}</td>
                     <td>{{ $item->estado }}</td>
                     <td>{{ $item->departamento->nombre ?? '' }}</td>
-                    <td>{{ $item->ente->nombre ?? '' }}</td>
+                    <td>{{ $item->cantidad}}</td>
                 </tr>
             @endforeach
         </tbody>

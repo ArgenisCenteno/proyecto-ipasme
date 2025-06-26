@@ -48,88 +48,80 @@ class MovimientoController extends Controller
         return view('movimientos.create', compact('proveedores', 'entes', 'departamentos'));
     }
 
-    public function store(Request $request)
-    {
-        // dd($request->all());
-        //Validar los datos del formulario, factura unica, monto no negativo, todos los campos requeridos menos observaciones
-        $request->validate([
-            'proveedor_id' => 'required|exists:proveedores,id',
-            'ente_id' => 'required|exists:entes,id',
-            'factura' => 'nullable|string|max:255|unique:movimientos,factura',
-            'monto' => 'required|numeric|min:0',
-            'observacion' => 'nullable|string|max:255',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'proveedor_id' => 'required|exists:proveedores,id',
+        'ente_id' => 'required|exists:entes,id',
+        'factura' => 'nullable|string|max:255|unique:movimientos,factura',
+         
+        'observacion' => 'nullable|string|max:255',
+    ]);
 
-        //Los productos son obligatorios
-
-        if (!$request->productos_json) {
-            Alert::error('No seleccionó los bienes', 'Se deben seleccionar al menos un bien.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
-
-            return redirect()->back()->withErrors(['productos' => 'Se deben seleccionar al menos un producto.']);
-        }
-
-        $bienes = json_decode($request->productos_json, true);
-        if (count($bienes) == 0) {
-            Alert::error('No selecciono los bienes', 'Se deben seleccionar al menos un bien.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
-
-            return redirect()->back()->withErrors(['productos' => 'Se deben seleccionar al menos un producto.']);
-        }
-        //Registrar el movimiento
-        $movimiento = Movimiento::create([
-            'proveedor_id' => $request->proveedor_id,
-            'ente_destino_id' => $request->ente_id,
-            'tipo' => 'ENTRADA',
-            'monto' => $request->monto,
-            'fecha' => $request->fecha,
-            'departamento_destino_id' => $request->departamento_destino_id,
-            'observaciones' => $request->observacion,
-            'factura' => $request->factura,
-            'descripcion' => $request->descripcion,
-            'user_id' => auth()->user()->id,
-        ]);
-
-        //Registrar los bienes del movimiento
-
-        foreach ($bienes as $bien) {
-            // Registrar el bien en el movimiento
-            $bien_movimiento = BienMovimiento::create([
-                'bien_id' => $bien['id'],
-                'movimiento_id' => $movimiento->id,
-                'cantidad' => $bien['cantidad'],
-            ]);
-
-            // Crear registros individuales de BienAsignado
-            for ($i = 0; $i < $bien['cantidad']; $i++) {
-                $codigo_inventario = 'INV-' . strtoupper(substr(md5(uniqid(rand(), true)), 0, 6)) . '-' . time();
-            //    dd($bien);
-                $asignacion = BienAsignado::create([
-                    'departamento_id' => $request->departamento_destino_id,
-                    'ente_id' => $request->ente_id,
-                    'bien_id' => $bien['id'],
-                    'movimiento_id' => $movimiento->id,
-                    'cantidad' => 1,
-                    'estado' => 'Activo', // puedes usar un estado por defecto como "activo"
-                    'fecha_adquisicion' => $request->fecha, // o date('Y-m-d') si no viene en el request
-                    'codigo_inventario' => $codigo_inventario,
-                    'serial' => $bien['serial'] ?? null, // Si el serial es opcional
-                ]);
-
-                HistorialMovimiento::create([
-                    'ente_destino_id' => $request->ente_id,
-                    'departamento_destino_id' => $request->departamento_destino_id,
-                    'bien_id' => $bien['id'],
-                    'bien_asignado_id' => $asignacion->id,
-                    'tipo' => 'ENTRADA',
-                    'codigo_inventario' => $asignacion->codigo_inventario,
-                ]);
-            }
-        }
-
-
-        Alert::success('¡Exito!', 'Movimiento registrado correctamente.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
-
-        return redirect()->route('movimientos.index')->with('success', 'Movimiento creado correctamente.');
+    if (!$request->productos_json) {
+        Alert::error('No seleccionó los bienes', 'Se deben seleccionar al menos un bien.')
+            ->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+        return redirect()->back()->withErrors(['productos' => 'Se deben seleccionar al menos un producto.']);
     }
+
+    $bienes = json_decode($request->productos_json, true);
+    if (count($bienes) == 0) {
+        Alert::error('No selecciono los bienes', 'Se deben seleccionar al menos un bien.')
+            ->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+        return redirect()->back()->withErrors(['productos' => 'Se deben seleccionar al menos un producto.']);
+    }
+
+    $movimiento = Movimiento::create([
+        'proveedor_id' => $request->proveedor_id,
+        'ente_destino_id' => $request->ente_id,
+        'tipo' => 'ENTRADA',
+        'monto' => 0,
+        'fecha' => $request->fecha,
+        'departamento_destino_id' => $request->departamento_destino_id,
+        'observaciones' => $request->observacion,
+        'factura' => $request->factura,
+        'descripcion' => $request->descripcion,
+        'user_id' => auth()->user()->id,
+    ]);
+
+    foreach ($bienes as $bien) {
+        // Relación con la tabla intermedia
+        BienMovimiento::create([
+            'bien_id' => $bien['id'],
+            'movimiento_id' => $movimiento->id,
+            'cantidad' => $bien['cantidad'],
+        ]);
+
+        // Un solo registro con cantidad total
+        $codigo_inventario = 'INV-' . strtoupper(substr(md5(uniqid(rand(), true)), 0, 6)) . '-' . time();
+
+        $asignacion = BienAsignado::create([
+            'departamento_id' => $request->departamento_destino_id,
+            'ente_id' => $request->ente_id,
+            'bien_id' => $bien['id'],
+            'movimiento_id' => $movimiento->id,
+            'cantidad' => $bien['cantidad'],
+            'estado' => 'Activo',
+            'fecha_adquisicion' => $request->fecha,
+            'codigo_inventario' => $codigo_inventario,
+            'serial' => $bien['serial'] ?? null,
+        ]);
+
+        // Solo un historial también
+        HistorialMovimiento::create([
+            'ente_destino_id' => $request->ente_id,
+            'departamento_destino_id' => $request->departamento_destino_id,
+            'bien_id' => $bien['id'],
+            'bien_asignado_id' => $asignacion->id,
+            'tipo' => 'ENTRADA',
+            'codigo_inventario' => $asignacion->codigo_inventario,
+        ]);
+    }
+
+    Alert::success('¡Éxito!', 'Movimiento registrado correctamente.')
+        ->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+    return redirect()->route('movimientos.index')->with('success', 'Movimiento creado correctamente.');
+}
 
     public function edit($id)
     {
@@ -334,108 +326,120 @@ class MovimientoController extends Controller
         return view('movimientos.createSalida', compact('entes'));
     }
 
-    public function storeSalida(Request $request)
-    {
-        //  dd($request->all());
-        $request->validate([
+public function storeSalida(Request $request)
+{
+    $request->validate([
+        'ente_destino_id' => 'required|exists:entes,id',
+        'ente_origen_id' => 'required|exists:entes,id',
+        'departamento_destino_id' => 'required|exists:departamentos,id',
+        'departamento_origen_id' => 'required|exists:departamentos,id',
+        'factura' => 'nullable|string|max:255|unique:movimientos,factura',
+        'observacion' => 'nullable|string|max:255',
+    ]);
 
-            'ente_destino_id' => 'required|exists:entes,id',
-            'ente_origen_id' => 'required|exists:entes,id',
-            'departamento_destino_id' => 'required|exists:departamentos,id',
-            'departamento_origen_id' => 'required|exists:departamentos,id',
-            'factura' => 'nullable|string|max:255|unique:movimientos,factura',
-            'monto' => 'required|numeric|min:0',
-            'observacion' => 'nullable|string|max:255',
+    if (!$request->productos_json) {
+        Alert::error('No seleccionó los bienes', 'Se deben seleccionar al menos un bien.')
+            ->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+        return redirect()->back()->withErrors(['productos' => 'Se deben seleccionar al menos un producto.']);
+    }
+
+    if ($request->departamento_origen_id == $request->departamento_destino_id) {
+        Alert::error('Error', 'No se puede crear una salida dentro de un mismo departamento.')
+            ->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+        return redirect()->back()->withErrors(['productos' => 'No se puede crear una salida dentro de un mismo departamento.']);
+    }
+
+    $bienes = json_decode($request->productos_json, true);
+    if (count($bienes) == 0) {
+        Alert::error('No seleccionó los bienes', 'Se deben seleccionar al menos un bien.')
+            ->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+        return redirect()->back()->withErrors(['productos' => 'Se deben seleccionar al menos un producto.']);
+    }
+
+    // Registrar el movimiento
+    $movimiento = Movimiento::create([
+        'ente_destino_id' => $request->ente_destino_id,
+        'ente_origen_id' => $request->ente_origen_id,
+        'tipo' => 'SALIDA',
+        'monto' => 0,
+        'fecha' => $request->fecha,
+        'departamento_destino_id' => $request->departamento_destino_id,
+        'departamento_origen_id' => $request->departamento_origen_id,
+        'observaciones' => $request->observacion,
+        'factura' => $request->factura,
+        'descripcion' => $request->descripcion,
+        'user_id' => auth()->user()->id,
+    ]);
+
+    foreach ($bienes as $bien) {
+        $bienMov = BienAsignado::find($bien['id']);
+
+        if (!$bienMov) continue;
+
+        if ($bien['cantidad'] > $bienMov->cantidad) {
+            Alert::error('Cantidad inválida', "No puede trasladar más cantidad del bien '{$bienMov->bien->nombre}' de la que tiene disponible.")
+                ->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+            return redirect()->back()->withErrors(['cantidad' => 'Cantidad excede lo disponible.']);
+        }
+
+        BienMovimiento::create([
+            'bien_id' => $bienMov->bien_id,
+            'movimiento_id' => $movimiento->id,
+            'cantidad' => $bien['cantidad'],
         ]);
 
-        //Los productos son obligatorios
-
-        if (!$request->productos_json) {
-            Alert::error('No seleccionó los bienes', 'Se deben seleccionar al menos un bien.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
-
-            return redirect()->back()->withErrors(['productos' => 'Se deben seleccionar al menos un producto.']);
-        }
-
-        if ($request->departamento_origen_id == $request->departamento_destino_id) {
-            Alert::error('Error', 'No se puede crear una salida dentro de un mismo departamento.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
-
-            return redirect()->back()->withErrors(['productos' => 'No se puede crear una salida dentro de un mismo departamento.']);
-        }
-
-        $bienes = json_decode($request->productos_json, true);
-        if (count($bienes) == 0) {
-            Alert::error('No selecciono los bienes', 'Se deben seleccionar al menos un bien.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
-
-            return redirect()->back()->withErrors(['productos' => 'Se deben seleccionar al menos un producto.']);
-        }
-        //Registrar el movimiento
-        $movimiento = Movimiento::create([
-
-            'ente_destino_id' => $request->ente_destino_id,
-            'ente_origen_id' => $request->ente_origen_id,
-            'tipo' => 'SALIDA',
-            'monto' => $request->monto,
-            'fecha' => $request->fecha,
-            'departamento_destino_id' => $request->departamento_destino_id,
-            'departamento_origen_id' => $request->departamento_origen_id,
-            'observaciones' => $request->observacion,
-            'factura' => $request->factura,
-            'descripcion' => $request->descripcion,
-            'user_id' => auth()->user()->id,
+        // Disminuir cantidad en el origen
+        $nuevaCantidad = $bienMov->cantidad - $bien['cantidad'];
+        $bienMov->update([
+            'cantidad' => $nuevaCantidad,
+            'estado' => $nuevaCantidad <= 0 ? 'Inactivo' : $bienMov->estado,
         ]);
 
-        //Registrar los bienes del movimiento
-        foreach ($bienes as $bien) {
+        // Verificar si ya existe ese bien en el departamento destino
+        $asignacionExistente = BienAsignado::where('departamento_id', $request->departamento_destino_id)
+            ->where('ente_id', $request->ente_destino_id)
+            ->where('bien_id', $bienMov->bien_id)
+            ->where('codigo_inventario', $bienMov->codigo_inventario)
+            ->first();
 
-            $bienMov = BienAsignado::find($bien['id']);
-            //   dd($bienMov, $bien['id']);
-            // dd($bienMov, $bien['id']);
-            // Registrar el bien en el movimiento
-            //  dd($bienMov);
-            $bien_movimiento = BienMovimiento::create([
-                'bien_id' => $bienMov->bien_id,
-                'movimiento_id' => $movimiento->id,
-                'cantidad' => $bien['cantidad'],
+        if ($asignacionExistente) {
+            // Sumar la cantidad al existente
+            $asignacionExistente->update([
+                'cantidad' => $asignacionExistente->cantidad + $bien['cantidad'],
+                'estado' => 'Activo', // por si estaba inactivo
             ]);
-
-
-            if ($bienMov) {
-                // Cambiar el estado del bien asignado actual a Inactivo
-                $bienMov->update([
-                    'estado' => 'Inactivo'
-                ]);
-            }
-
-            // Crear una nueva asignación activa para el nuevo departamento y ente
+            $asignacion = $asignacionExistente;
+        } else {
+            // Crear una nueva asignación
             $asignacion = BienAsignado::create([
                 'departamento_id' => $request->departamento_destino_id,
                 'ente_id' => $request->ente_destino_id,
                 'bien_id' => $bienMov->bien_id,
                 'movimiento_id' => $movimiento->id,
-                'cantidad' => 1,
+                'cantidad' => $bien['cantidad'],
                 'estado' => 'Activo',
                 'fecha_adquisicion' => $request->fecha,
-                'codigo_inventario' => $bienMov->codigo_inventario
-
-            ]);
-
-            HistorialMovimiento::create([
-                'ente_destino_id' => $request->ente_destino_id,
-                'departamento_destino_id' => $request->departamento_destino_id,
-                'ente_origen_id' => $request->ente_origen_id,
-                'departamento_origen_id' => $request->departamento_origen_id,
-                'bien_id' => $bienMov->bien_id,
-                'bien_asignado_id' => $asignacion->id,
                 'codigo_inventario' => $bienMov->codigo_inventario,
-                'tipo' => 'SALIDA',
             ]);
         }
 
-
-        Alert::success('¡Exito!', 'Movimiento registrado correctamente.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
-
-        return redirect()->route('salidas.index')->with('success', 'Movimiento creado correctamente.');
+        // Registrar historial del movimiento
+        HistorialMovimiento::create([
+            'ente_destino_id' => $request->ente_destino_id,
+            'departamento_destino_id' => $request->departamento_destino_id,
+            'ente_origen_id' => $request->ente_origen_id,
+            'departamento_origen_id' => $request->departamento_origen_id,
+            'bien_id' => $bienMov->bien_id,
+            'bien_asignado_id' => $asignacion->id,
+            'codigo_inventario' => $bienMov->codigo_inventario,
+            'tipo' => 'SALIDA',
+        ]);
     }
+
+    Alert::success('¡Éxito!', 'Movimiento registrado correctamente.')->showConfirmButton('Aceptar', 'rgb(5, 141, 79)');
+    return redirect()->route('salidas.index')->with('success', 'Movimiento creado correctamente.');
+}
+
 
     public function exportEntradasPorFecha(Request $request)
     {

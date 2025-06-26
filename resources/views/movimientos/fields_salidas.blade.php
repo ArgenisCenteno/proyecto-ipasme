@@ -35,13 +35,7 @@
             <label for="fecha" class="form-label">Fecha <span class="text-danger">*</span></label>
             <input type="date" name="fecha" id="fecha" class="form-control" value="{{ old('fecha') }}" required>
         </div>
-
-        <!-- Monto -->
-        <div class="col-md-6 mb-3">
-            <label for="monto" class="form-label">Monto</label>
-            <input type="number" step="any" name="monto" id="monto" class="form-control" value="{{ old('monto') }}">
-        </div>
-
+ 
         <!-- Descripción -->
         <div class="col-md-12 mb-3">
             <label for="descripcion" class="form-label">Descripción <span class="text-danger">*</span></label>

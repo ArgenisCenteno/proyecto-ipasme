@@ -7,6 +7,7 @@ use App\Models\BienAsignado;
 use App\Models\Departamento;
 use App\Models\Movimiento;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -61,51 +62,20 @@ class HomeController extends Controller
         $desaparecidos = BienAsignado::where('estado', 'desaparecido')->count();
         $descartados = BienAsignado::where('estado', 'descartado')->count();
 
-       $stockMinimo = 5;
-$departamentoId = 16; // El almacén que quieres evaluar
+        $stockMinimo = 5;
+        $departamentoId = 16; // El almacén que quieres evaluar
 
-// Obtienes todos los bienes asignados a ese departamento que están activos
-$asignados = BienAsignado::where('departamento_id', $departamentoId)
-    ->where('estado', 'activo') // o el valor que indique activo
-    ->get();
+        // Obtienes todos los bienes asignados a ese departamento que están activos
+        $asignados = BienAsignado::where('departamento_id', $departamentoId)
+            ->where('estado', 'activo') // o el valor que indique activo
+            ->get();
+$stockMinimo = 5;
 
-// Agrupas por bien_id para sumar cantidades
-$stockPorBien = $asignados->groupBy('bien_id')->map(function ($items, $bienId) {
-    return $items->sum('cantidad');
-});
-
-$alertas = [];
-
-foreach ($stockPorBien as $bienId => $cantidadDisponible) {
-    if ($cantidadDisponible <= $stockMinimo) {
-        $bien = Bien::find($bienId);
-        $alertas[] = [
-            'bien' => $bien->nombre,
-            'disponible' => $cantidadDisponible,
-            'mensaje' => "Quedan solo {$cantidadDisponible} unidades de {$bien->nombre} en almacén, es necesario reponer.",
-        ];
-    }
-}
-
-        // Paginar el array $alertas
-        $page = request()->get('page', 1);
-        $perPage = 5; // Items por página, ajusta aquí
-
-        $collection = collect($alertas);
-
-        $currentPageItems = $collection->slice(($page - 1) * $perPage, $perPage)->values();
-
-        $paginatedAlertas = new LengthAwarePaginator(
-            $currentPageItems,
-            $collection->count(),
-            $perPage,
-            $page,
-            ['path' => request()->url()
-            , 'query' => request()->query()]
-        );
+$bienesBajoStock = BienAsignado::where('cantidad', '<', 5)->get();
+       
 
 
 
-        return view('home', compact('paginatedAlertas', 'descartados', 'meses', 'desaparecidos', 'entradas', 'salidas', 'departamentos', 'bienes'));
+        return view('home', compact( 'bienesBajoStock','descartados', 'meses', 'desaparecidos', 'entradas', 'salidas', 'departamentos', 'bienes'));
     }
 }

@@ -1,26 +1,11 @@
 <div class="row mb-3">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <label for="tipo" class="form-label">Tipo</label>
         <input type="text" class="form-control" id="tipo" value="{{ ucfirst($movimiento->tipo) }}" disabled>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <label for="fecha" class="form-label">Fecha</label>
         <input type="text" class="form-control" id="fecha" value="{{ $movimiento->fecha->format('d-m-Y') }}" disabled>
-    </div>
-    <div class="col-md-4">
-        <label for="monto" class="form-label">Monto</label>
-        <input type="text" class="form-control" id="monto" value="{{ number_format($movimiento->monto, 2) }}" disabled>
-    </div>
-</div>
-
-<div class="row mb-3">
-    <div class="col-md-6">
-        <label for="ente_origen" class="form-label">Ente Origen</label>
-        <input type="text" class="form-control" id="ente_origen" value="{{ $movimiento->enteOrigen->nombre ?? '-' }}" disabled>
-    </div>
-    <div class="col-md-6">
-        <label for="ente_destino" class="form-label">Ente Destino</label>
-        <input type="text" class="form-control" id="ente_destino" value="{{ $movimiento->enteDestino->nombre ?? '-' }}" disabled>
     </div>
 </div>
 
@@ -39,6 +24,9 @@
     <div class="col-md-6">
         <label for="usuario" class="form-label">Registrado por</label>
         <input type="text" class="form-control" id="usuario" value="{{ $movimiento->user->name ?? '-' }}" disabled>
+    </div>
+    <div class="col-md-6">
+        {{-- Espacio vacío para alinear con los demás --}}
     </div>
 </div>
 
@@ -79,7 +67,6 @@
     </table>
 </div>
 
-{{-- Paginación --}}
 <div class="d-flex justify-content-center">
     {{ $bienes->links() }}
 </div>
