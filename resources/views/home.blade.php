@@ -159,7 +159,7 @@
           <div class="col-12 pb-4 mb-4">
           <div class="card">
             <div class="card-body" style="height: 10rem">
-           <h5>Bienes con Bajo Stock</h5>
+       <h5>Bienes con Bajo Stock</h5>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -182,6 +182,9 @@
         @endforelse
     </tbody>
 </table>
+
+{{ $bienesBajoStock->links() }}
+
 
             </div>
           </div>

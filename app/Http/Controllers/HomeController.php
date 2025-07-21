@@ -71,7 +71,8 @@ class HomeController extends Controller
             ->get();
 $stockMinimo = 5;
 
-$bienesBajoStock = BienAsignado::where('cantidad', '<', 5)->get();
+$bienesBajoStock = BienAsignado::where('cantidad', '<', 5)->paginate(5);
+
        
 
 

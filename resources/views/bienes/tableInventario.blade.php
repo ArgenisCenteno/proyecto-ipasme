@@ -2,7 +2,7 @@
     <table class="table table-hover" id="entes-table">
         <thead class="bg-light">
             <tr>
-
+                <th>Tipo</th>
                 <th>Código</th>
                 <th>Nombre</th>
                 <th>Categoría</th>
@@ -10,8 +10,10 @@
                 <th>Marca</th>
                 <th>Módelo</th>
                 <th>Serial</th>
-                <th>Activo</th>
-                 <th>Cantidad</th>
+                <th>Activo Fijo</th>
+                <th>Cantidad</th>
+                   <th>Fecha Adquisición</th>
+                     <th>Fecha Salida</th>
                 <th>Estado</th>
                 <th>Opciones</th>
             </tr>
@@ -36,17 +38,20 @@
             type: "POST",
 
             columns: [
+                  { data: 'movimiento.tipo', name: 'movimiento.tipo' },
                 { data: 'codigo_inventario', name: 'codigo_inventario' },
                 { data: 'nombre', name: 'nombre' },
 
                 { data: 'categoria', name: 'categoria' },
                 { data: 'unidad_medida', name: 'unidad_medida' },
-                 { data: 'marca', name: 'marca' },
-                  { data: 'modelo', name: 'modelo' },
-                   
-                      { data: 'serial', name: 'serial' },
-                        { data: 'activos', name: 'activos' },
-                         { data: 'cantidad', name: 'cantidad' },
+                { data: 'marca', name: 'marca' },
+                { data: 'modelo', name: 'modelo' },
+
+                { data: 'serial', name: 'serial' },
+                { data: 'activos', name: 'activos' },
+                { data: 'cantidad', name: 'cantidad' },
+                 { data: 'fecha_adquisicion', name: 'fecha_adquisicion' },
+                 {data: 'fecha_salida', name: 'fecha_salida' },
                 { data: 'estado', name: 'estado' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false }
             ],

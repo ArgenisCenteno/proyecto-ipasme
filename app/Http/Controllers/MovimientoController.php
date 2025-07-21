@@ -307,11 +307,12 @@ class MovimientoController extends Controller
                 ->editColumn('enteOrigen', function ($row) {
                     return $row->enteOrigen->nombre ?? 'No asignado';
                 })
+            
                 ->rawColumns(['actions'])
                 ->make(true);
         } else {
              $entes = Ente::first();
-             $departamentos = Departamento::where('nombre', 'ALMACEN')->get();
+             $departamentos = Departamento::get();
             return view('movimientos.salidas')->with('entes', $entes)->with('departamentos', $departamentos);
         }
 
@@ -322,7 +323,7 @@ class MovimientoController extends Controller
     {
 
         $entes = Ente::first();
-
+        
         return view('movimientos.createSalida', compact('entes'));
     }
 

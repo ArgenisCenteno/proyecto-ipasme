@@ -154,7 +154,7 @@ class BienController extends Controller
     public function inventario(Request $request)
     {
         if ($request->ajax()) {
-            $productos = BienAsignado::with('bien')->get(); // Cargar la relación subCategoria
+            $productos = BienAsignado::with('bien', 'movimiento')->get(); // Cargar la relación subCategoria
 
             return DataTables::of($productos)
                 ->editColumn('estado', function ($row) {
@@ -187,6 +187,9 @@ class BienController extends Controller
                 })
                  ->editColumn('marca', function ($row) {
                     return $row->bien->marca ?? 'S/D';
+                })
+                    ->editColumn('fecha_salida', function ($row) {
+                    return $row->movimiento->tipo == 'SALIDA' ? $row->movimiento->fecha->format('Y-m-d') : 'No aplica';
                 })
                  ->editColumn('serial', function ($row) {
                     return $row->serial ?? 'S/D';

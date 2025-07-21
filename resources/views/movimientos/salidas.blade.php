@@ -61,17 +61,25 @@
                            <input type="hidden" name="ente_id" value="{{ $entes->id }}">
 
                         <!-- Departamento -->
-                        <div class="col-md-6 mb-3">
-                            <label for="departamento_destino_id" class="form-label">Departamento Destino<span
-                                    class="text-danger">*</span></label>
-                            <select name="departamento_destino_id" id="departamento_destino_id"
-                                class="form-select @error('departamento_destino_id') is-invalid @enderror" required>
-                                <option value="">Seleccione un departamento</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                @error('departamento_destino_id') {{ $message }} @enderror
-                            </div>
-                        </div>
+                       <div class="col-md-6 mb-3">
+    <label for="departamento_destino_id" class="form-label">Departamento Destino
+        <span class="text-danger">*</span>
+    </label>
+    <select name="departamento_destino_id" id="departamento_destino_id"
+        class="form-select @error('departamento_destino_id') is-invalid @enderror" required>
+        <option value="">Seleccione un departamento</option>
+        @foreach($departamentos as $departamento)
+            <option value="{{ $departamento->id }}"
+                {{ old('departamento_destino_id') == $departamento->id ? 'selected' : '' }}>
+                {{ $departamento->nombre }}
+            </option>
+        @endforeach
+    </select>
+    <div class="invalid-feedback">
+        @error('departamento_destino_id') {{ $message }} @enderror
+    </div>
+</div>
+
                     </div>
 
                     <div class="row">
